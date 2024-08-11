@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class SenderReceiverAppl {
 
-	private static final int N_MESSAGES = 2000;
+	private static final int N_MESSAGES = 20;
 	private static final int N_RECEIVERS = 10;
 
 	public static void main(String[] args) throws InterruptedException {
@@ -46,12 +46,9 @@ public class SenderReceiverAppl {
 		ConsumerReceiver[] receivers = 
 		IntStream.range(0, nReceivers).mapToObj(i -> {
 			ConsumerReceiver receiver = new ConsumerReceiver();
-			int threadNumber = Integer.parseInt(receiver.getName().replaceAll("Thread-", ""));
-			if (threadNumber % 2 == 0) {
-				receiver.setMessageBoxes(messageEvenBox);
-			} else {
-				receiver.setMessageBoxes(messageOddBox);
-			}
+			int threadNumber = (int) receiver.getId();
+			BlockingQueue<String> assignedBox = (threadNumber % 2 == 0) ? messageEvenBox : messageOddBox;
+            receiver.setMessageBoxes(assignedBox);
 			return receiver;
 		}).toArray(ConsumerReceiver[]::new);
 		Arrays.stream(receivers).forEach(ConsumerReceiver::start);

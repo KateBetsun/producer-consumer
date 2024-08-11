@@ -21,13 +21,8 @@ public class ProducerSender extends Thread {
 	        .forEach(i -> {
 	        	String message = "message" + i;
 	            try {
-	                if (i % 2 == 0) {
-	                    messageEvenBox.put(message);
-//	                    System.out.println(i + " added to messageEvenBox");
-	                } else {
-	                    messageOddBox.put(message);
-//	                    System.out.println(i + " added to messageOddBox");
-	                }
+	                BlockingQueue<String> targetBox = (i % 2 == 0) ? messageEvenBox : messageOddBox;
+	                targetBox.put(message);
 	            } catch (InterruptedException e) {
 	                //no interrupt logics
 	            }
